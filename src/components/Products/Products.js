@@ -9,10 +9,9 @@ import {
     CardBody,
     CardTitle,
     CardSubtitle,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
 } from 'reactstrap';
+import ProductCard from '../ProductCard/ProductCard';
+import CustomPagination from '../CustomPagination/CustomPagination';
 import './Products.scss';
 
 const Products = (props) => {
@@ -22,12 +21,9 @@ const Products = (props) => {
     const [activePage, setActivePage] = useState(1);
     const startPage = activePage - 2 <= 0 ? 1 : activePage - 2;
     const pageRange = [...Array(pageSize).keys()].map(i => i + startPage);
-    console.log(activePage);
     const itemsToShow = items.slice((activePage - 1) * pageSize, (activePage - 1) * pageSize + pageSize);
-    console.log(itemsToShow);
 
     const movementHandler = (type) => {
-        console.log(type);
         switch (type) {
             case 'first':
                 if (activePage === 1) return;
@@ -48,61 +44,23 @@ const Products = (props) => {
         }
     };
 
-    const handlePageChange = (selectedPage) => {
-        setActivePage(selectedPage);
+    const pageChangeHandler = (selectedPage) => {
+        if (selectedPage <= lastPage)
+            setActivePage(selectedPage);
     };
 
     return (
         <Container>
-            <Row>
-                {itemsToShow.map(item => <Col key={item.id} md="4">
-                    <Card>
-                        <CardImg top width="100%" src={item.image} alt="product image" />
-                        <CardBody>
-                            <CardTitle>{item.name}</CardTitle>
-                            <CardSubtitle>products</CardSubtitle>
-                            <CardText>{item.description}</CardText>
-                        </CardBody>
-                    </Card>
-                </Col>)}
-            </Row>
-            <div className="text-center pagination-container">
-                <Pagination
-                    aria-label="pagination">
-                    <PaginationItem
-                        disabled={activePage === 1}
-                        onClick={() => movementHandler('first')}
-                    >
-                        <PaginationLink first />
-                    </PaginationItem>
-                    <PaginationItem
-                        disabled={activePage === 1}
-                        onClick={() => movementHandler('prev')}
-                    >
-                        <PaginationLink previous />
-                    </PaginationItem>
-                    {pageRange.map((page, index) => (
-                        <PaginationItem
-                            key={page}
-                            active={activePage === page}
-                            onClick={() => handlePageChange(page)}
-                        >
-                            <PaginationLink>{page}</PaginationLink>
-                        </PaginationItem>
-                    )
-                    )}
-                    <PaginationItem
-                        disabled={activePage === lastPage}
-                        onClick={() => movementHandler('next')}>
-                        <PaginationLink next />
-                    </PaginationItem>
-                    <PaginationItem
-                        disabled={activePage === lastPage}
-                        onClick={() => movementHandler('last')}>
-                        <PaginationLink last />
-                    </PaginationItem>
-                </Pagination>
-            </div>
+            <ProductCard
+                products={itemsToShow}
+            />
+            <CustomPagination
+                activePage={activePage}
+                lastPage={lastPage}
+                pageChangeHandler={pageChangeHandler}
+                movementHandler={movementHandler}
+                pageRange={pageRange}
+            />
         </Container>
     );
 }
