@@ -1,15 +1,14 @@
-import React, { useContext } from 'react';
-import { store } from '../../store/store';
+import React from 'react';
+import NavBar from '../../components/NavBar/NavBar';
+import Products from '../../components/Products/Products';
+import items from '../../data/products';
 
-const Home = () => {
-    const state = useContext(store);
-    console.log('2', state.state);
-    const { user } = state;
-    console.log(user)
+const Home = (props) => {
+
     return (
         <>
-            <h1>Home</h1>
-            <h2>{(user && user.email) ? user.email : null}</h2>
+            <NavBar />
+            <Products items={items}/>
         </>
     );
 }

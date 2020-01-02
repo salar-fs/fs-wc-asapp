@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { store } from '../../store/store';
+import React, { useState } from 'react';
+import withStore from '../../hoc/withStore';
 import {
     Label,
     Input,
@@ -13,10 +13,14 @@ import './LoginForm.scss';
 import { userSchemes } from '../../schemes/users';
 import { useHistory } from 'react-router-dom';
 
-const LoginForm = () => {
-    const state = useContext(store);
-    const { dispatch } = state;
+const LoginForm = (props) => {
+    const { appStore } = props;
+    const { state, dispatch } = appStore;
     const history = useHistory();
+
+    if (state.user.isAuthenticated) {
+        history.push('/');
+    }
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypedPassword, setRetypedPassword] = useState('');
@@ -94,4 +98,4 @@ const LoginForm = () => {
     );
 }
 
-export default LoginForm;
+export default withStore(LoginForm);
